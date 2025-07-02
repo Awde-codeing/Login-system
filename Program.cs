@@ -11,46 +11,54 @@ namespace Login_system
         {
             string filePath = "users.csv";
 
-            // Load users from CSV file created above
+                                                      // Load users from CSV file created above
             List<User> users = LoadUsersFromCsv(filePath);
 
-            // If file was empty , add default users and save
+                                                      // If file was empty , add default users and save
             if (users.Count == 0)
             {
-                //usues the list users for default users
+                                                      //usues the list users for default users
                 users = new List<User> {
                     new User("awde", "secretawde"),
                     new User("admin", "admin321"),
                     new User("lego", "foxy")
                 };
-                //saves default users to the file
+                                                      //saves default users to the file
                 SaveUsersToCsv(users, filePath);
             }
-            //prompts to create user using Y for yes and N for no
-            //takes the user input even if u write in caps and then converts it to lower to make sure that it does not break
+                                                      //prompts to create user using Y for yes and N for no
+                                                      //takes the user input even if u write in caps and then converts it to lower to make sure that it does not break
             Console.WriteLine("Do you want to create a new user? (y/n)");
             string addUserInput = Console.ReadLine()?.ToLower();
-            //if statement that checks what you type if its y or n
+                                                      //if statement that checks what you type if its y or n
             if (addUserInput == "y")
             {
-                //creates a string called new user
+                                                      //creates a string called new user
                 Console.Clear();
                 string newUser;
                 while (true)
                 {
-                    //while true to make sure ur ina loop until you enter a username without a comma and that it uses a real username
+                                                      //while true to make sure ur ina loop until you enter a username without a comma and that it uses a real username
                     Console.WriteLine("Enter new username (no commas allowed):");
                     newUser = Console.ReadLine();
-                    //if statement to check if the username contains a comma
+                                                      //checks so the password so you cant skip through the username
+                    if (string.IsNullOrWhiteSpace(newUser)) // ← NULL or empty or whitespace
+                    {
+                        Console.WriteLine("Username cannot be empty. Please try again.");
+                        Thread.Sleep(2000);
+                        Console.Clear();
+                        continue;
+                    }
+                                                      //if statement to check if the username contains a comma
                     if (newUser.Contains(","))
                     {
                         Console.WriteLine("Username can't contain commas. Please try again.");
                         Thread.Sleep(2000);
                         Console.Clear();
                     }
-                    //checks the if the user list exists, user=> username..... means that for each user in the list it checks if user.username is equals the value of newUser
+                                                       //checks the if the user list exists, user=> username..... means that for each user in the list it checks if user.username is equals the value of newUser
                     if (users.Exists(user => user.Username == newUser))     //uses a lamba expression basically meaning true or false in very simplified terms
-                        //if any user has a username matching the new user itreturns the true otherwise its a false
+                                                       //if any user has a username matching the new user itreturns the true otherwise its a false
                     {
                         Console.WriteLine($"Username '{newUser}' is already taken. Please try again.");
                         Thread.Sleep(2000);
@@ -61,14 +69,22 @@ namespace Login_system
                         break;
                     }
                 }
-                //creates a string called new pass for the password of a new user
-                string newPass;
+                                                       //creates a string called new pass for the password of a new user
+                string newPass = "";
                 while (true)
                 {
-                    //while true loop for the same but just with a password instead of username
+                                                       //while true loop for the same but just with a password instead of username
+                    if (string.IsNullOrWhiteSpace(newPass)) //Checks for any null values 
+                    {
+                        Console.WriteLine("Password cannot be empty. Please try again.");
+                        Thread.Sleep(2000);
+                        Console.Clear();
+                        continue;
+                    }
+
                     Console.WriteLine("Enter new password (no commas allowed):");
                     newPass = ReadPassword();
-                    //literally the same as username but if its a password instead
+                                                       //literally the same as username but if its a password instead
                     if (newPass.Contains(","))
                     {
                         Console.WriteLine("Password cannot contain commas. Please try again.");
@@ -77,31 +93,31 @@ namespace Login_system
                     }
                     break;
                 }
-                //adds the newly made user
+                                                        //adds the newly made user
                 users.Add(new User(newUser, newPass));
 
-                // Save updated users list to CSV file
+                                                        // Save updated users list to CSV file
                 SaveUsersToCsv(users, filePath);
-                //clears console from the previous texts and allows you to go to login area
+                                                        //clears console from the previous texts and allows you to go to login area
                 Console.Clear();
                 Console.WriteLine($"User '{newUser}' added successfully!\n\n");
             }
-            //login area where you type in user and password correctly
+                                                        //login area where you type in user and password correctly
             Console.WriteLine("Please enter your username:");
             string userName = Console.ReadLine();
             Console.Clear();
-            //reads password and makes it a string for the bool below
+                                                        //reads password and makes it a string for the bool below
             Console.WriteLine("Please enter your password:");
             string password = ReadPassword();
             Console.Clear();
-            //bool to check that users exist and the username and password fits correctly
+                                                        //bool to check that users exist and the username and password fits correctly
             bool isAuthenticated = users.Exists(user => user.Username == userName && user.Password == password);
-            //checks if everything is writtent correctly with an if statement
+                                                        //checks if everything is writtent correctly with an if statement
             if (isAuthenticated)
             {
                 Console.WriteLine("You have correctly logged in!");
             }
-            //if you type wrong it will not allow you to log in
+                                                        //if you type wrong it will not allow you to log in
             else
             {
                 Console.WriteLine("Username or password is wrong");
@@ -109,26 +125,26 @@ namespace Login_system
 
             Console.ReadKey();
         }
-        //area for saving to csv file, using var as somewhat confused to what i should change it out with variable wise
+                                                        //area for saving to csv file, using var as somewhat confused to what i should change it out with variable wise
         static void SaveUsersToCsv(List<User> users, string filePath)
         {
 
             var lines = new List<string>();
             foreach (var user in users)
             {
-                // Just write's username and password separated by comma, in csv file
+                                                        // Just write's username and password separated by comma, in csv file
                 lines.Add($"{user.Username},{user.Password}");
             }
             File.WriteAllLines(filePath, lines);
         }
-        //loads the users from csv file so that you can actually use the newly created user
+                                                        //loads the users from csv file so that you can actually use the newly created user
         static List<User> LoadUsersFromCsv(string filePath)
         {
-           //create an empty list to store the users
+                                                        //create an empty list to store the users
             var users = new List<User>();
-            //checks if the file exists at the file path calling on the filepath.userscsv
+                                                        //checks if the file exists at the file path calling on the filepath.userscsv
             if (!File.Exists(filePath))
-                //returns an empty list if the file does not exist
+                                                        //returns an empty list if the file does not exist
                 return users;
 
             var lines = File.ReadAllLines(filePath);    //read all lines from the csv file, (into an array of strings)
