@@ -42,7 +42,7 @@ namespace Login_system
                     Console.WriteLine("Enter new username (no commas allowed):");
                     newUser = Console.ReadLine();
                                                       //checks so the password so you cant skip through the username
-                    if (string.IsNullOrWhiteSpace(newUser)) // ← NULL or empty or whitespace
+                    if (string.IsNullOrWhiteSpace(newUser)) //NULL or empty or whitespace
                     {
                         Console.WriteLine("Username cannot be empty. Please try again.");
                         Thread.Sleep(2000);
