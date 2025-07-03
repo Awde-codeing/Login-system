@@ -17,7 +17,7 @@ namespace Login_system
                                                       // If file was empty , add default users and save
             if (users.Count == 0)
             {
-                                                      //usues the list users for default users
+                                                      //users the list users for default users
                 users = new List<User> {
                     new User("awde", "secretawde"),
                     new User("admin", "admin321"),
@@ -184,7 +184,7 @@ namespace Login_system
                 }
                 else
                 {
-                    password += key.KeyChar;            //if the password is equal or adding a key press this checks for it
+                    password += key.KeyChar;            //this means add and then save the password for any keypress
                     Console.Write("*");                 //this makes it so whenever  the password gets inputted it gets hidden
                 }
             }
